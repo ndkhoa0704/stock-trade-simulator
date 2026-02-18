@@ -14,8 +14,9 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  await authStore.tryRestoreSession();
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
     next('/login');
   } else if (to.meta.guest && authStore.isLoggedIn) {

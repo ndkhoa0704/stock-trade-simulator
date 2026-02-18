@@ -5,16 +5,20 @@ import api from '../services/api';
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
   const isLoggedIn = ref(false);
+  let _initPromise = null;
 
   async function tryRestoreSession() {
-    try {
-      const res = await api.get('/auth/me');
-      user.value = res.data.user;
-      isLoggedIn.value = true;
-    } catch {
-      user.value = null;
-      isLoggedIn.value = false;
-    }
+    if (_initPromise) return _initPromise;
+    _initPromise = api.get('/auth/me')
+      .then(res => {
+        user.value = res.data.user;
+        isLoggedIn.value = true;
+      })
+      .catch(() => {
+        user.value = null;
+        isLoggedIn.value = false;
+      });
+    return _initPromise;
   }
 
   async function login({ username, password }) {
@@ -33,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
     await api.post('/auth/logout');
     user.value = null;
     isLoggedIn.value = false;
+    _initPromise = null;
   }
 
   return { user, isLoggedIn, tryRestoreSession, login, register, logout };
