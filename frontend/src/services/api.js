@@ -8,7 +8,8 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
+    // Skip redirect for /auth/me — a 401 there just means not logged in
+    if (err.response?.status === 401 && !err.config.url.includes('/auth/me')) {
       window.location.href = '/login';
     }
     return Promise.reject(err);

@@ -9,7 +9,7 @@
       </select>
     </div>
     <div v-if="loading" class="text-center py-3"><div class="spinner-border spinner-border-sm"></div></div>
-    <div v-else-if="transactions.length === 0" class="text-muted text-center py-3">No transactions found.</div>
+    <div v-else-if="portfolioStore.transactions.length === 0" class="text-muted text-center py-3">No transactions found.</div>
     <div v-else class="table-responsive">
       <table class="table table-sm table-hover align-middle">
         <thead class="table-light">
@@ -25,7 +25,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="tx in transactions" :key="tx._id">
+          <tr v-for="tx in portfolioStore.transactions" :key="tx._id">
             <td class="text-nowrap">{{ formatDate(tx.createdAt) }}</td>
             <td><strong>{{ tx.stockCode }}</strong></td>
             <td>
@@ -54,14 +54,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { usePortfolioStore } from '../stores/portfolio';
 
 const props = defineProps({ portfolioId: String });
 const emit = defineEmits(['deleted']);
 
 const portfolioStore = usePortfolioStore();
-const { transactions } = portfolioStore;
 
 const loading = ref(false);
 const total = ref(0);

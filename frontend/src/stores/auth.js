@@ -7,17 +7,19 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false);
   let _initPromise = null;
 
-  async function tryRestoreSession() {
-    if (_initPromise) return _initPromise;
-    _initPromise = api.get('/auth/me')
-      .then(res => {
-        user.value = res.data.user;
-        isLoggedIn.value = true;
-      })
-      .catch(() => {
-        user.value = null;
-        isLoggedIn.value = false;
-      });
+  // Returns a memoized promise so /auth/me is only called once per session
+  function tryRestoreSession() {
+    if (!_initPromise) {
+      _initPromise = api.get('/auth/me')
+        .then((res) => {
+          user.value = res.data.user;
+          isLoggedIn.value = true;
+        })
+        .catch(() => {
+          user.value = null;
+          isLoggedIn.value = false;
+        });
+    }
     return _initPromise;
   }
 
@@ -25,12 +27,14 @@ export const useAuthStore = defineStore('auth', () => {
     const res = await api.post('/auth/login', { username, password });
     user.value = res.data.user;
     isLoggedIn.value = true;
+    _initPromise = Promise.resolve();
   }
 
   async function register({ username, email, password }) {
     const res = await api.post('/auth/register', { username, email, password });
     user.value = res.data.user;
     isLoggedIn.value = true;
+    _initPromise = Promise.resolve();
   }
 
   async function logout() {
