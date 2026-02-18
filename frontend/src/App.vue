@@ -10,5 +10,4 @@ import AppNavbar from './components/AppNavbar.vue';
 import { useAuthStore } from './stores/auth';
 
 const authStore = useAuthStore();
-authStore.tryRestoreSession();
 </script>
