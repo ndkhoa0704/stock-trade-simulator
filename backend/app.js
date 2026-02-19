@@ -20,9 +20,9 @@ module.exports = function AppFactory() {
             SELF.app.use(express.json());
             SELF.app.use(cookieParser());
 
-            SELF.app.use('/api', routes());
+            SELF.app.use('/api', routes);
 
-            SELF.app.use(errorHandler());
+            SELF.app.use(errorHandler);
 
             return SELF.app;
         },
