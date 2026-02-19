@@ -21,6 +21,7 @@ if (cluster.isPrimary) {
     const appFactory = require('./app');
     const fs = require('node:fs');
     const path = require('node:path');
+    const express = require('express');
 
     db.connect().then(() => {
         redisConfig.connect();
