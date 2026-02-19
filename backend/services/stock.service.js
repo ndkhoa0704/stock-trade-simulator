@@ -1,7 +1,7 @@
 const { StockPrice } = require('../models/market');
 const redisCache = require('../utils/redisCache');
 
-module.exports = function StockService() {
+function StockService() {
     const SELF = {
         priceCacheKey: (code) => {
             return `stock:price:${code}`;
@@ -54,4 +54,6 @@ module.exports = function StockService() {
             return results.map((r) => r.stockCode);
         },
     };
-};
+}
+
+module.exports = StockService();
