@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const config = require('./index');
 
-module.exports = function DBUtil() {
+function DBUtil() {
   const SELF = {
     connected: false,
   };
@@ -19,3 +19,5 @@ module.exports = function DBUtil() {
     },
   };
 };
+
+module.exports = DBUtil();

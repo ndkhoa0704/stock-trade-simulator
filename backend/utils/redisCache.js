@@ -1,4 +1,4 @@
-const redisConfig = require('../config/redis')();
+const redisConfig = require('../config/redis');
 
 function RedisUtil() {
     const SELF = {
