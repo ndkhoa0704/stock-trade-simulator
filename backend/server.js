@@ -22,23 +22,26 @@ if (cluster.isPrimary) {
     const fs = require('node:fs');
     const path = require('node:path');
 
+    db.connect().then(() => {
+        redisConfig.connect();
 
-    await db.connect();
-    redisConfig.connect();
+        const app = appFactory().init();
+        // Serve static files from Vue build in production
+        const clientDistPath = path.join(__dirname, '../frontend/dist');
+        if (fs.existsSync(clientDistPath)) {
+            app.use(express.static(clientDistPath));
 
-    const app = appFactory().init();
-    // Serve static files from Vue build in production
-    const clientDistPath = path.join(__dirname, '../frontend/dist');
-    if (fs.existsSync(clientDistPath)) {
-        app.use(express.static(clientDistPath));
+            // Handle SPA routing
+            app.get('*', (_req, res) => {
+                res.sendFile(path.join(clientDistPath, 'index.html'));
+            });
+        }
 
-        // Handle SPA routing
-        app.get('*', (_req, res) => {
-            res.sendFile(path.join(clientDistPath, 'index.html'));
+        app.listen(config.port, () => {
+            console.log(`[Worker ${process.pid}] Listening on port ${config.port}`);
         });
-    }
-
-    app.listen(config.port, () => {
-        console.log(`[Worker ${process.pid}] Listening on port ${config.port}`);
+    }).catch((err) => {
+        console.error('[Worker] Error:', err);
+        process.exit(1);
     });
 }
