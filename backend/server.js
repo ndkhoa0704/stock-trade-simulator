@@ -24,7 +24,7 @@ if (cluster.isPrimary) {
 
 
     await db.connect();
-    await redisConfig.connect();
+    redisConfig.connect();
 
     const app = appFactory().init();
     // Serve static files from Vue build in production
