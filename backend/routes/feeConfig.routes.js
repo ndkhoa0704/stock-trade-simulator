@@ -2,11 +2,9 @@ const express = require('express');
 const feeConfigController = require('../controllers/feeConfig.controller')();
 const authMiddleware = require('../middleware/auth')();
 
-module.exports = function () {
-  const router = express.Router();
+const router = express.Router();
 
-  router.get('/', authMiddleware, feeConfigController.get);
-  router.put('/', authMiddleware, feeConfigController.update);
+router.get('/', authMiddleware, feeConfigController.get);
+router.put('/', authMiddleware, feeConfigController.update);
 
-  return router;
-};
+module.exports = router;
