@@ -1,6 +1,6 @@
-const portfolioService = require('../services/portfolio.service')();
+const portfolioService = require('../services/portfolio.service');
 
-module.exports = function PortfolioController() {
+function PortfolioController() {
     return {
         list: async (req, res, next) => {
             try {
@@ -48,3 +48,5 @@ module.exports = function PortfolioController() {
         },
     };
 };
+
+module.exports = PortfolioController();

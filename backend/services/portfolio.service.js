@@ -1,7 +1,7 @@
 const { Portfolio } = require('../models/Portfolio');
 const { Transaction } = require('../models/Transaction');
 
-module.exports = function PortfolioService() {
+function PortfolioService() {
     return {
         list: async (userId) => {
             return Portfolio.find({ userId }).sort({ createdAt: -1 });
@@ -61,3 +61,5 @@ module.exports = function PortfolioService() {
         },
     };
 };
+
+module.exports = PortfolioService();

@@ -1,6 +1,6 @@
-const feeConfigService = require('../services/feeConfig.service')();
+const feeConfigService = require('../services/feeConfig.service');
 
-module.exports = function feeConfigController() {
+function feeConfigController() {
     return {
         get: async function get(req, res, next) {
             try {
@@ -21,4 +21,6 @@ module.exports = function feeConfigController() {
             }
         },
     };
-};
+}
+
+module.exports = feeConfigController();

@@ -4,7 +4,7 @@ const { User } = require('../models/User');
 const { FeeConfig } = require('../models/feeConfig');
 const config = require('../config');
 
-module.exports = function AuthService() {
+function AuthService() {
     const SELF = {
         generateToken: (user) => {
             return jwt.sign(
@@ -63,3 +63,5 @@ module.exports = function AuthService() {
         },
     };
 };
+
+module.exports = AuthService();

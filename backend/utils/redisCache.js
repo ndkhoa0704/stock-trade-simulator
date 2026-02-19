@@ -1,6 +1,6 @@
 const redisConfig = require('../config/redis')();
 
-module.exports = function RedisUtil() {
+function RedisUtil() {
     const SELF = {
         getClient: () => {
             return redisConfig.getClient();
@@ -37,3 +37,5 @@ module.exports = function RedisUtil() {
         },
     };
 };
+
+module.exports = RedisUtil();

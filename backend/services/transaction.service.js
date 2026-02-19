@@ -4,7 +4,7 @@ const { FeeConfig } = require('../models/feeConfig');
 const costCalculator = require('../utils/costCalculator')();
 const redisCache = require('../utils/redisCache')();
 
-module.exports = function TransactionService() {
+function TransactionService() {
   const SELF = {
     cacheKey: (portfolioId) => {
       return `holdings:${portfolioId}`;
@@ -121,3 +121,5 @@ module.exports = function TransactionService() {
     },
   };
 };
+
+module.exports = TransactionService();

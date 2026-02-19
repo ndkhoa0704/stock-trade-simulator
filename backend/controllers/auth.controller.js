@@ -1,6 +1,6 @@
-const authService = require('../services/auth.service')();
+const authService = require('../services/auth.service');
 
-module.exports = function AuthController() {
+function AuthController() {
     const SELF = {
         cookieOptions: {
             httpOnly: true,
@@ -54,3 +54,5 @@ module.exports = function AuthController() {
         },
     };
 };
+
+module.exports = AuthController();

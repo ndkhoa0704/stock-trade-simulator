@@ -1,6 +1,6 @@
 const express = require('express');
-const portfolioController = require('../controllers/portfolio.controller')();
-const authMiddleware = require('../middleware/auth')();
+const portfolioController = require('../controllers/portfolio.controller');
+const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 

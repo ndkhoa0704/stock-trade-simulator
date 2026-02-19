@@ -1,6 +1,6 @@
-const stockService = require('../services/stock.service')();
+const stockService = require('../services/stock.service');
 
-module.exports = function StockController() {
+function StockController() {
     return {
         getPrice: async (req, res, next) => {
             try {
@@ -20,4 +20,6 @@ module.exports = function StockController() {
             }
         },
     };
-};
+}
+
+module.exports = StockController();

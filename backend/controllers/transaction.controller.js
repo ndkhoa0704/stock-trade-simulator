@@ -1,6 +1,6 @@
-const transactionService = require('../services/transaction.service')();
+const transactionService = require('../services/transaction.service');
 
-module.exports = function TransactionController() {
+function TransactionController() {
     return {
         list: async (req, res, next) => {
             try {
@@ -45,3 +45,5 @@ module.exports = function TransactionController() {
         },
     };
 };
+
+module.exports = TransactionController();

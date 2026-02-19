@@ -1,5 +1,5 @@
-const { StockPrice } = require('../models/stockPrice');
-const redisCache = require('../utils/redisCache')();
+const { StockPrice } = require('../models/market');
+const redisCache = require('../utils/redisCache');
 
 module.exports = function StockService() {
     const SELF = {

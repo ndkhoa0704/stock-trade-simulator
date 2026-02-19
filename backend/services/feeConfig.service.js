@@ -1,6 +1,6 @@
 const { FeeConfig } = require('../models/feeConfig');
 
-module.exports = function FeeConfigService() {
+function FeeConfigService() {
     return {
         get: async (userId) => {
             let config = await FeeConfig.findOne({ userId });
@@ -20,3 +20,5 @@ module.exports = function FeeConfigService() {
         },
     };
 };
+
+module.exports = FeeConfigService();
