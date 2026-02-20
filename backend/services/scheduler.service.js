@@ -19,7 +19,7 @@ function SchedulerService() {
         startJobs: () => {
             console.log('Starting scheduled jobs')
             // Start all scheduled jobs
-            JOBS.jobs.forEach(job => {
+            JOBS.forEach(job => {
                 console.log(`Create schedule for job ${job.name}`)
                 const schedule = new CronJob(job.cron, async () => {
                     const options = job?.options ?? job?.params ?? {};
