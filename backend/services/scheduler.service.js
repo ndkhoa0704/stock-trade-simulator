@@ -24,7 +24,7 @@ function SchedulerService() {
                 const schedule = new CronJob(job.cron, async () => {
                     const options = job?.options ?? job?.params ?? {};
                     job.func(options);
-                }).start();
+                });
                 SELF.jobs[job.name] = schedule;
                 SELF.jobs[job.name].start(); // Start the schedule
 
