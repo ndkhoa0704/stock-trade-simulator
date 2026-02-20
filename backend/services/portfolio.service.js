@@ -1,5 +1,5 @@
-const { Portfolio } = require('../models/Portfolio');
-const { Transaction } = require('../models/Transaction');
+const { Portfolio } = require('../models/portfolio');
+const { Transaction } = require('../models/transaction');
 
 function PortfolioService() {
     return {

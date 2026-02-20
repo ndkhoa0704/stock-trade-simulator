@@ -1,5 +1,5 @@
-const { Transaction } = require('../models/Transaction');
-const { Portfolio } = require('../models/Portfolio');
+const { Transaction } = require('../models/transaction');
+const { Portfolio } = require('../models/portfolio');
 const { FeeConfig } = require('../models/feeConfig');
 const costCalculator = require('../utils/costCalculator');
 const redisCache = require('../utils/redisCache');
