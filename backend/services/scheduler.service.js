@@ -17,10 +17,10 @@ function SchedulerService() {
     }
     return {
         startJobs: () => {
-            logger.info('Starting scheduled jobs')
+            console.log('Starting scheduled jobs')
             // Start all scheduled jobs
             jobConfig.jobs.forEach(job => {
-                logger.info(`Create schedule for job ${job.name}`)
+                console.log(`Create schedule for job ${job.name}`)
                 const schedule = new CronJob(job.cron, async () => {
                     const options = job?.options ?? job?.params ?? {};
                     job.func(options);
@@ -29,9 +29,9 @@ function SchedulerService() {
                 SELF.jobs[job.name].start(); // Start the schedule
 
                 if (job?.stopWhen) {
-                    logger.info(`Create stop schedule for ${job.name}`)
+                    console.log(`Create stop schedule for ${job.name}`)
                     const stopSchedule = new CronJob(job.stopWhen, async () => {
-                        logger.info(`Stopping job ${job.name}`)
+                        console.log(`Stopping job ${job.name}`)
                         SELF.jobs[job.name].stop();
                     })
                     SELF.endJobs[job.name] = stopSchedule;
@@ -39,9 +39,9 @@ function SchedulerService() {
                 }
 
                 if (job?.startWhen) {
-                    logger.info(`Create start schedule for ${job.name}`)
+                    console.log(`Create start schedule for ${job.name}`)
                     const startSchedule = new CronJob(job.startWhen, async () => {
-                        logger.info(`Starting job ${job.name}`)
+                        console.log(`Starting job ${job.name}`)
                         if (!SELF.jobs[job.name].isActive)
                             SELF.jobs[job.name].start();
                     })
