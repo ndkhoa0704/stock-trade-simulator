@@ -17,7 +17,7 @@ if (cluster.isPrimary) {
         cluster.fork();
     });
 
-    cconsole.log('[Master] Starting scheduled jobs');
+    console.log('[Master] Starting scheduled jobs');
     SchedulerService.startJobs();
 } else {
     const db = require('./config/db');
