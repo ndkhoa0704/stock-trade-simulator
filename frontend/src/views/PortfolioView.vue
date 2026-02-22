@@ -5,6 +5,9 @@
       <div class="d-flex align-items-center mb-4 gap-3">
         <router-link to="/" class="btn btn-outline-secondary btn-sm">← Back</router-link>
         <h2 class="mb-0">{{ portfolioStore.currentPortfolio?.name }}</h2>
+        <router-link :to="`/portfolio/${portfolioId}/performance`" class="btn btn-outline-primary btn-sm ms-auto">
+          Performance
+        </router-link>
       </div>
 
       <div class="card mb-4">

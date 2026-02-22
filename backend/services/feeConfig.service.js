@@ -10,10 +10,16 @@ function FeeConfigService() {
             return config;
         },
 
-        update: async (userId, { buyFeeRate, sellFeeRate, taxRate }) => {
+        update: async (userId, { buyFeeRate, sellFeeRate, taxRate, statisticsWindow }) => {
+            const fields = {};
+            if (buyFeeRate !== undefined) fields.buyFeeRate = buyFeeRate;
+            if (sellFeeRate !== undefined) fields.sellFeeRate = sellFeeRate;
+            if (taxRate !== undefined) fields.taxRate = taxRate;
+            if (statisticsWindow !== undefined) fields.statisticsWindow = statisticsWindow;
+
             const config = await FeeConfig.findOneAndUpdate(
                 { userId },
-                { buyFeeRate, sellFeeRate, taxRate },
+                fields,
                 { new: true, upsert: true, runValidators: true }
             );
             return config;

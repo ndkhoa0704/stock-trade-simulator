@@ -13,8 +13,8 @@ function feeConfigController() {
 
         update: async function update(req, res, next) {
             try {
-                const { buyFeeRate, sellFeeRate, taxRate } = req.body;
-                const config = await feeConfigService.update(req.user.id, { buyFeeRate, sellFeeRate, taxRate });
+                const { buyFeeRate, sellFeeRate, taxRate, statisticsWindow } = req.body;
+                const config = await feeConfigService.update(req.user.id, { buyFeeRate, sellFeeRate, taxRate, statisticsWindow });
                 res.json({ feeConfig: config });
             } catch (err) {
                 next(err);

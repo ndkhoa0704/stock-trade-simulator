@@ -17,6 +17,14 @@
           <input v-model.number="form.taxRate" type="number" class="form-control" step="0.001" min="0" max="100" required />
         </div>
       </div>
+      <hr class="my-3" />
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Statistics Window (days)</label>
+          <input v-model.number="form.statisticsWindow" type="number" class="form-control" step="1" min="10" max="3650" required />
+          <div class="form-text">Number of days used to calculate Beta, Std Dev, and Variance.</div>
+        </div>
+      </div>
       <button type="submit" class="btn btn-primary mt-3" :disabled="loading">
         {{ loading ? 'Saving...' : 'Save Settings' }}
       </button>
@@ -28,7 +36,7 @@
 import { ref, onMounted } from 'vue';
 import api from '../services/api';
 
-const form = ref({ buyFeeRate: 0.15, sellFeeRate: 0.15, taxRate: 0.1 });
+const form = ref({ buyFeeRate: 0.15, sellFeeRate: 0.15, taxRate: 0.1, statisticsWindow: 90 });
 const loading = ref(false);
 const success = ref(false);
 const error = ref('');
@@ -40,6 +48,7 @@ onMounted(async () => {
     buyFeeRate: +(c.buyFeeRate * 100).toFixed(4),
     sellFeeRate: +(c.sellFeeRate * 100).toFixed(4),
     taxRate: +(c.taxRate * 100).toFixed(4),
+    statisticsWindow: c.statisticsWindow ?? 90,
   };
 });
 
@@ -52,6 +61,7 @@ async function handleSave() {
       buyFeeRate: form.value.buyFeeRate / 100,
       sellFeeRate: form.value.sellFeeRate / 100,
       taxRate: form.value.taxRate / 100,
+      statisticsWindow: form.value.statisticsWindow,
     });
     success.value = true;
     setTimeout(() => (success.value = false), 3000);

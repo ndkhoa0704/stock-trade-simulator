@@ -1,12 +1,23 @@
 const { CronJob } = require('cron');
 const MarketJob = require('../jobs/market');
+const PortfolioJob = require('../jobs/portfolio');
 
 const JOBS = [
     {
         cron: '*/5 * * * 1-5',
         name: 'market_stock_price',
         func: MarketJob.jobSaveStockPrice
-    }
+    },
+    {
+        cron: '0 18 * * 1-5',  // 6PM Mon-Fri (after market close)
+        name: 'market_index',
+        func: MarketJob.jobSaveMarketIndex
+    },
+    {
+        cron: '0 23 * * 1-5',  // 11PM Mon-Fri
+        name: 'portfolio_performance',
+        func: PortfolioJob.jobSavePortfolioPerformance
+    },
 ]
 
 function SchedulerService() {

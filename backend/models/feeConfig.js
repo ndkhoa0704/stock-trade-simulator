@@ -6,6 +6,7 @@ const feeConfigSchema = new mongoose.Schema(
         buyFeeRate: { type: Number, default: 0.0015 },
         sellFeeRate: { type: Number, default: 0.0015 },
         taxRate: { type: Number, default: 0.001 },
+        statisticsWindow: { type: Number, default: 90 },
     },
     { timestamps: true }
 );
