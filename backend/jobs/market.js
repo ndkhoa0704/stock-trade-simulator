@@ -55,35 +55,40 @@ function MarketJob() {
 
     return {
         jobSaveStockPrice: async (dateStr) => {
-            console.log(`[MarketJob] jobSaveStockPrice start: ${dateStr}`);
+            try {
+                console.log(`[MarketJob] jobSaveStockPrice start: ${dateStr}`);
 
-            const raw = await SELF.fetchAllPages(dateStr);
+                const raw = await SELF.fetchAllPages(dateStr);
 
-            if (!raw || raw.length === 0) {
-                console.log(`[MarketJob] No stock price data for ${dateStr}`);
-                return [];
+                if (!raw || raw.length === 0) {
+                    console.log(`[MarketJob] No stock price data for ${dateStr}`);
+                    return [];
+                }
+
+                const targetDate = new Date(`${dateStr}T00:00:00.000Z`);
+
+                const docs = raw
+                    .filter(d => d?.code && d?.close != null)
+                    .map(d => ({
+                        stockCode: String(d.code).trim().toUpperCase(),
+                        price: Number(d.close) * 1000,
+                        date: targetDate,
+                        open: d.open != null ? Number(d.open) * 1000 : undefined,
+                        high: d.high != null ? Number(d.high) * 1000 : undefined,
+                        low: d.low != null ? Number(d.low) * 1000 : undefined,
+                        close: Number(d.close) * 1000,
+                        volume: d.nmVolume != null ? Math.round(Number(d.nmVolume)) : undefined,
+                    }));
+
+                await StockPrice.deleteMany({ date: targetDate });
+                await StockPrice.insertMany(docs, { ordered: false });
+
+                console.log(`[MarketJob] jobSaveStockPrice done: inserted ${docs.length} records for ${dateStr}`);
+                return docs;
+            } catch (error) {
+                console.error(`[MarketJob] jobSaveStockPrice error: ${error.stack}`);
+                return Promise.reject(error);
             }
-
-            const targetDate = new Date(`${dateStr}T00:00:00.000Z`);
-
-            const docs = raw
-                .filter(d => d?.code && d?.close != null)
-                .map(d => ({
-                    stockCode: String(d.code).trim().toUpperCase(),
-                    price: Number(d.close) * 1000,
-                    date: targetDate,
-                    open: d.open != null ? Number(d.open) * 1000 : undefined,
-                    high: d.high != null ? Number(d.high) * 1000 : undefined,
-                    low: d.low != null ? Number(d.low) * 1000 : undefined,
-                    close: Number(d.close) * 1000,
-                    volume: d.nmVolume != null ? Math.round(Number(d.nmVolume)) : undefined,
-                }));
-
-            await StockPrice.deleteMany({ date: targetDate });
-            await StockPrice.insertMany(docs, { ordered: false });
-
-            console.log(`[MarketJob] jobSaveStockPrice done: inserted ${docs.length} records for ${dateStr}`);
-            return docs;
         },
 
         jobSaveMarketIndex: async (dateStr) => {
