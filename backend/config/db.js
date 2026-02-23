@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('./index');
+const LogUtil = require('../utils/logUtil');
 
 function DBUtil() {
     const SELF = {
@@ -11,9 +12,9 @@ function DBUtil() {
             try {
                 await mongoose.connect(config.mongoUri);
                 SELF.connected = true;
-                console.log('[DB] MongoDB connected');
+                LogUtil.info('[DB] MongoDB connected');
             } catch (err) {
-                console.error('[DB] Connection error:', err.message);
+                LogUtil.error(`[DB] Connection error: ${err.message}`);
                 process.exit(1);
             }
         },

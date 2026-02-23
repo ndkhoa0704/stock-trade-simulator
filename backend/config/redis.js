@@ -1,5 +1,6 @@
 const Redis = require('ioredis');
 const config = require('./index');
+const LogUtil = require('../utils/logUtil');
 
 function RedisUtil() {
     const SELF = {
@@ -13,8 +14,8 @@ function RedisUtil() {
                 maxRetriesPerRequest: 3,
             });
 
-            SELF.client.on('connect', () => console.log('[Redis] Connected'));
-            SELF.client.on('error', (err) => console.error('[Redis] Error:', err.message));
+            SELF.client.on('connect', () => LogUtil.info('[Redis] Connected'));
+            SELF.client.on('error', (err) => LogUtil.error(`[Redis] Error: ${err.message}`));
 
             return SELF.client;
         },

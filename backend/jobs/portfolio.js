@@ -4,6 +4,7 @@ const { StockPrice } = require('../models/market');
 const { PortfolioSnapshot } = require('../models/portfolioSnapshot');
 const costCalculator = require('../utils/costCalculator');
 const timeUtil = require('../utils/timeUtil');
+const LogUtil = require('../utils/logUtil');
 
 function PortfolioJob() {
     const SELF = {
@@ -60,7 +61,7 @@ function PortfolioJob() {
     return {
         jobSavePortfolioPerformance: async () => {
             const dateStr = SELF.getTodayDateStr();
-            console.log(`[PortfolioJob] jobSavePortfolioPerformance start: ${dateStr}`);
+            LogUtil.info(`[PortfolioJob] jobSavePortfolioPerformance start: ${dateStr}`);
 
             const todayDate = new Date(`${dateStr}T00:00:00.000Z`);
             const todayDateEnd = new Date(`${dateStr}T23:59:59.999Z`);
@@ -128,11 +129,11 @@ function PortfolioJob() {
 
                     saved++;
                 } catch (err) {
-                    console.error(`[PortfolioJob] Error processing portfolio ${portfolio._id}:`, err.message);
+                    LogUtil.error(`[PortfolioJob] Error processing portfolio ${portfolio._id}: ${err.message}`);
                 }
             }
 
-            console.log(`[PortfolioJob] jobSavePortfolioPerformance done: saved ${saved} snapshots for ${dateStr}`);
+            LogUtil.info(`[PortfolioJob] jobSavePortfolioPerformance done: saved ${saved} snapshots for ${dateStr}`);
         },
     };
 }

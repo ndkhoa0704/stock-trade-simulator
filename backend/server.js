@@ -1,23 +1,24 @@
 const cluster = require('node:cluster');
 const os = require('node:os');
 const config = require('./config');
+const LogUtil = require('./utils/logUtil');
 
 const numWorkers = config.workers > 0 ? config.workers : os.cpus().length;
 
 if (cluster.isPrimary) {
     const SchedulerService = require('./services/scheduler.service');
-    console.log(`[Master] PID ${process.pid} - spawning ${numWorkers} workers`);
+    LogUtil.info(`[Master] PID ${process.pid} - spawning ${numWorkers} workers`);
 
     for (let i = 0; i < numWorkers; i++) {
         cluster.fork();
     }
 
     cluster.on('exit', (worker, code, signal) => {
-        console.log(`[Master] Worker ${worker.process.pid} exited (${signal || code}). Restarting...`);
+        LogUtil.info(`[Master] Worker ${worker.process.pid} exited (${signal || code}). Restarting...`);
         cluster.fork();
     });
 
-    console.log('[Master] Starting scheduled jobs');
+    LogUtil.info('[Master] Starting scheduled jobs');
     SchedulerService.startJobs();
 } else {
     const db = require('./config/db');
@@ -43,10 +44,10 @@ if (cluster.isPrimary) {
         }
 
         app.listen(config.port, () => {
-            console.log(`[Worker ${process.pid}] Listening on port ${config.port}`);
+            LogUtil.info(`[Worker ${process.pid}] Listening on port ${config.port}`);
         });
     }).catch((err) => {
-        console.error('[Worker] Error:', err);
+        LogUtil.error(`[Worker] Error: ${err.message}`);
         process.exit(1);
     });
 }

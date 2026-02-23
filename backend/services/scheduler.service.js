@@ -1,6 +1,7 @@
 const { CronJob } = require('cron');
 const MarketJob = require('../jobs/market');
 const PortfolioJob = require('../jobs/portfolio');
+const LogUtil = require('../utils/logUtil');
 
 const JOBS = [
     {
@@ -28,10 +29,10 @@ function SchedulerService() {
     }
     return {
         startJobs: () => {
-            console.log('Starting scheduled jobs')
+            LogUtil.info('Starting scheduled jobs')
             // Start all scheduled jobs
             JOBS.forEach(job => {
-                console.log(`Create schedule for job ${job.name}`)
+                LogUtil.info(`Create schedule for job ${job.name}`)
                 const schedule = new CronJob(job.cron, async () => {
                     const options = job?.options ?? job?.params ?? {};
                     job.func(options);
@@ -40,9 +41,9 @@ function SchedulerService() {
                 SELF.jobs[job.name].start(); // Start the schedule
 
                 if (job?.stopWhen) {
-                    console.log(`Create stop schedule for ${job.name}`)
+                    LogUtil.info(`Create stop schedule for ${job.name}`)
                     const stopSchedule = new CronJob(job.stopWhen, async () => {
-                        console.log(`Stopping job ${job.name}`)
+                        LogUtil.info(`Stopping job ${job.name}`)
                         SELF.jobs[job.name].stop();
                     })
                     SELF.endJobs[job.name] = stopSchedule;
@@ -50,9 +51,9 @@ function SchedulerService() {
                 }
 
                 if (job?.startWhen) {
-                    console.log(`Create start schedule for ${job.name}`)
+                    LogUtil.info(`Create start schedule for ${job.name}`)
                     const startSchedule = new CronJob(job.startWhen, async () => {
-                        console.log(`Starting job ${job.name}`)
+                        LogUtil.info(`Starting job ${job.name}`)
                         if (!SELF.jobs[job.name].isActive)
                             SELF.jobs[job.name].start();
                     })
