@@ -1,5 +1,6 @@
 const { StockPrice, MarketIndex } = require('../models/market');
 const timeUtil = require('../utils/timeUtil');
+const { logger } = require('../utils/logUtil');            // added
 
 function MarketJob() {
     const SELF = {
@@ -56,12 +57,12 @@ function MarketJob() {
     return {
         jobSaveStockPrice: async (dateStr) => {
             try {
-                console.log(`[MarketJob] jobSaveStockPrice start: ${dateStr}`);
+                logger.info(`[MarketJob] jobSaveStockPrice start: ${dateStr}`);
 
                 const raw = await SELF.fetchAllPages(dateStr);
 
                 if (!raw || raw.length === 0) {
-                    console.log(`[MarketJob] No stock price data for ${dateStr}`);
+                    logger.info(`[MarketJob] No stock price data for ${dateStr}`);
                     return [];
                 }
 
@@ -83,10 +84,10 @@ function MarketJob() {
                 await StockPrice.deleteMany({ date: targetDate });
                 await StockPrice.insertMany(docs, { ordered: false });
 
-                console.log(`[MarketJob] jobSaveStockPrice done: inserted ${docs.length} records for ${dateStr}`);
+                logger.info(`[MarketJob] jobSaveStockPrice done: inserted ${docs.length} records for ${dateStr}`);
                 return docs;
             } catch (error) {
-                console.error(`[MarketJob] jobSaveStockPrice error: ${error.stack}`);
+                logger.error(`[MarketJob] jobSaveStockPrice error: ${error.stack}`);
                 return Promise.reject(error);
             }
         },
@@ -95,7 +96,7 @@ function MarketJob() {
             if (!dateStr || typeof dateStr !== 'string') {
                 dateStr = timeUtil.convertDateToStr(new Date(), 'YYYY-MM-DD');
             }
-            console.log(`[MarketJob] jobSaveMarketIndex start: ${dateStr}`);
+            logger.info(`[MarketJob] jobSaveMarketIndex start: ${dateStr}`);
 
             try {
                 const codes = SELF.INDEX_CODES;
@@ -106,7 +107,7 @@ function MarketJob() {
                         const data = await SELF.getUrl(url);
                         return { code, rows: Array.isArray(data?.data) ? data.data : [] };
                     } catch (e) {
-                        console.error(`[MarketJob] Failed to get index ${code}: ${e.message}`);
+                        logger.error(`[MarketJob] Failed to get index ${code}: ${e.message}`);
                         return { code, rows: [] };
                     }
                 });
@@ -114,7 +115,7 @@ function MarketJob() {
                 const allData = results.flatMap(r => r.rows);
 
                 if (allData.length === 0) {
-                    console.log(`[MarketJob] No market index data for date ${dateStr} (skip upsert)`);
+                    logger.info(`[MarketJob] No market index data for date ${dateStr} (skip upsert)`);
                     return [];
                 }
 
@@ -164,12 +165,12 @@ function MarketJob() {
 
                 const failedCount = results.filter(r => r.rows.length === 0).length;
                 if (failedCount > 0) {
-                    console.warn(`[MarketJob] jobSaveMarketIndex: ${failedCount}/${codes.length} codes returned empty or failed for ${dateStr}`);
+                    logger.warn(`[MarketJob] jobSaveMarketIndex: ${failedCount}/${codes.length} codes returned empty or failed for ${dateStr}`);
                 }
-                console.log(`[MarketJob] jobSaveMarketIndex done: upserted ${uniqueData.length} records for ${dateStr}`);
+                logger.info(`[MarketJob] jobSaveMarketIndex done: upserted ${uniqueData.length} records for ${dateStr}`);
                 return uniqueData;
             } catch (error) {
-                console.error(`[MarketJob] jobSaveMarketIndex error: ${error.stack}`);
+                logger.error(`[MarketJob] jobSaveMarketIndex error: ${error.stack}`);
                 return Promise.reject(error);
             }
         },
