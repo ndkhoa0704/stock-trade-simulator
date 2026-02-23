@@ -88,7 +88,6 @@ function MarketJob() {
                 return docs;
             } catch (error) {
                 logger.error(`[MarketJob] jobSaveStockPrice error: ${error.stack}`);
-                return Promise.reject(error);
             }
         },
 
@@ -171,7 +170,6 @@ function MarketJob() {
                 return uniqueData;
             } catch (error) {
                 logger.error(`[MarketJob] jobSaveMarketIndex error: ${error.stack}`);
-                return Promise.reject(error);
             }
         },
     };
